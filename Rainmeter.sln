@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Application", "Application\Application.vcxproj", "{D2A0903C-E760-4134-AE61-3D55BF8F760C}"
 EndProject
@@ -82,6 +82,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PluginWin7Audio", "Plugins\PluginWin7Audio\PluginWin7Audio.vcxproj", "{6D032D6B-7656-4743-B454-3388E2921EB0}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PluginWindowMessage", "Plugins\PluginWindowMessage\PluginWindowMessage.vcxproj", "{B9184DBA-C6B7-44FE-8BBD-0852DB22D2E4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginClipboard", "Plugins\PluginClipboard\PluginClipboard.csproj", "{D5D65EB7-6573-4C30-8846-EAA8A3E612BB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -357,6 +359,14 @@ Global
 		{442084A6-2069-4927-B0C9-51525A720CB2}.Debug|x64.Build.0 = Debug|x64
 		{442084A6-2069-4927-B0C9-51525A720CB2}.Release|Win32.ActiveCfg = Release|Win32
 		{442084A6-2069-4927-B0C9-51525A720CB2}.Release|x64.ActiveCfg = Release|x64
+		{D5D65EB7-6573-4C30-8846-EAA8A3E612BB}.Debug|Win32.ActiveCfg = Debug|x86
+		{D5D65EB7-6573-4C30-8846-EAA8A3E612BB}.Debug|Win32.Build.0 = Debug|x86
+		{D5D65EB7-6573-4C30-8846-EAA8A3E612BB}.Debug|x64.ActiveCfg = Debug|x64
+		{D5D65EB7-6573-4C30-8846-EAA8A3E612BB}.Debug|x64.Build.0 = Debug|x64
+		{D5D65EB7-6573-4C30-8846-EAA8A3E612BB}.Release|Win32.ActiveCfg = Release|x86
+		{D5D65EB7-6573-4C30-8846-EAA8A3E612BB}.Release|Win32.Build.0 = Release|x86
+		{D5D65EB7-6573-4C30-8846-EAA8A3E612BB}.Release|x64.ActiveCfg = Release|x64
+		{D5D65EB7-6573-4C30-8846-EAA8A3E612BB}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
