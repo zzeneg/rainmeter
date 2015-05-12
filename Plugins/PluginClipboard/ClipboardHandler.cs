@@ -10,30 +10,48 @@ namespace PluginClipboard
 {
     internal class ClipboardHandler
     {
-        internal static List<ClipboardData> ClipboardDataList = new List<ClipboardData>();
+        private static ClipboardHandler _current;
 
-        internal static int MeasureCount = 0;
+        private readonly List<ClipboardData> _historyList;
 
-        internal static void HandleClipboardData(object data)
+        internal static ClipboardHandler Current
+        {
+            get { return _current ?? (_current = new ClipboardHandler()); }
+        }
+
+        internal ClipboardHandler()
+        {
+            _historyList = new List<ClipboardData>();
+        }
+
+        internal void AddHistoryItem(ClipboardData clipboardData)
         {
             API.Log(API.LogType.Notice, "HandleClipboardData");
 
-            var clipboardData = new ClipboardData(data);
-
-            for (var i = ClipboardDataList.Count - 1; i >= 0; i--)
+            for (var i = _historyList.Count - 1; i >= 0; i--)
             {
-                if (ClipboardDataList[i].ToString() == clipboardData.ToString())
+                if (_historyList[i].ToString() == clipboardData.ToString())
                 {
-                    ClipboardDataList.RemoveAt(i);
+                    _historyList.RemoveAt(i);
                 }
             }
 
-            ClipboardDataList.Insert(0, clipboardData);
+            _historyList.Insert(0, clipboardData);
 
-            if (ClipboardDataList.Count > MeasureCount)
+            if (_historyList.Count > Measure.Count)
             {
-                ClipboardDataList.RemoveAt(ClipboardDataList.Count - 1);
+                _historyList.RemoveAt(_historyList.Count - 1);
             }
+        }
+
+        internal string GetHistoryItem(int id)
+        {
+            if (id >= _historyList.Count)
+            {
+                return string.Empty;
+            }
+
+            return _historyList[id].ToString();
         }
     }
 

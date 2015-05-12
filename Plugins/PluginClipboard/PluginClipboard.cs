@@ -8,10 +8,12 @@ namespace PluginClipboard
     {
         private readonly int _id;
 
+        internal static int Count;
+
         internal Measure()
         {
-            _id = ClipboardHandler.MeasureCount;
-            ClipboardHandler.MeasureCount++;
+            _id = Measure.Count;
+            Measure.Count++;
         }
 
         internal void Reload(API api, ref double maxValue)
@@ -27,12 +29,7 @@ namespace PluginClipboard
 #if DLLEXPORT_GETSTRING
         internal string GetString()
         {
-            if (_id >= ClipboardHandler.ClipboardDataList.Count)
-            {
-                return string.Empty;
-            }
-
-            return ClipboardHandler.ClipboardDataList[_id].ToString();
+            return ClipboardHandler.Current.GetHistoryItem(_id);
         }
 #endif
 
@@ -53,13 +50,21 @@ namespace PluginClipboard
         public static void Initialize(ref IntPtr data, IntPtr rm)
         {
             data = GCHandle.ToIntPtr(GCHandle.Alloc(new Measure()));
-            if (!ClipboardViewer.IsStarted) ClipboardViewer.Start();
+            if (!ClipboardViewer.IsStarted)
+            {
+                ClipboardViewer.Start();
+            }
         }
 
         [DllExport]
         public static void Finalize(IntPtr data)
         {
-            if (ClipboardViewer.IsStarted) ClipboardViewer.Stop();
+            
+            if (ClipboardViewer.IsStarted)
+            {
+                Measure.Count = 0;
+                ClipboardViewer.Stop();
+            }
             GCHandle.FromIntPtr(data).Free();
 
 #if DLLEXPORT_GETSTRING

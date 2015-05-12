@@ -9,8 +9,8 @@ namespace PluginClipboard
     {
         private static ClipboardViewer _mInstance;
 
-        internal delegate void DeviceNotifyDelegate(object data);
-        internal static event DeviceNotifyDelegate DeviceNotify = ClipboardHandler.HandleClipboardData;
+        internal delegate void DeviceNotifyDelegate(ClipboardData data);
+        internal static event DeviceNotifyDelegate DeviceNotify = ClipboardHandler.Current.AddHistoryItem;
 
         private static IntPtr _clipboardViewer;
 
@@ -87,7 +87,7 @@ namespace PluginClipboard
                         data = Clipboard.GetDataObject();
                     }
 
-                    DeviceNotify(data);
+                    DeviceNotify(new ClipboardData(data));
                     NativeMethods.SendMessage(_clipboardViewer, m.Msg, m.WParam, m.LParam);
                     break;
 
