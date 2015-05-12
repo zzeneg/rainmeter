@@ -10,41 +10,38 @@ namespace PluginClipboard
 {
     internal class ClipboardHandler
     {
-        internal static List<MyMeasure> Measures = new List<MyMeasure>();
+        internal static List<ClipboardData> ClipboardDataList = new List<ClipboardData>();
 
-        internal static void HandleClipboardData()
+        internal static int MeasureCount = 0;
+
+        internal static void HandleClipboardData(object data)
         {
             API.Log(API.LogType.Notice, "HandleClipboardData");
-            object data;
-            if (Clipboard.ContainsFileDropList())
+
+            var clipboardData = new ClipboardData(data);
+
+            for (var i = ClipboardDataList.Count - 1; i >= 0; i--)
             {
-                data = Clipboard.GetFileDropList();
+                if (ClipboardDataList[i].ToString() == clipboardData.ToString())
+                {
+                    ClipboardDataList.RemoveAt(i);
+                }
             }
 
-            else if (Clipboard.ContainsImage())
-            {
-                data = Clipboard.GetImage();
-            }
+            ClipboardDataList.Insert(0, clipboardData);
 
-            else if (Clipboard.ContainsText())
+            if (ClipboardDataList.Count > MeasureCount)
             {
-                data = Clipboard.GetText();
+                ClipboardDataList.RemoveAt(ClipboardDataList.Count - 1);
             }
-            else
-            {
-                data = Clipboard.GetDataObject();
-            }
-
-            Measures.Insert(0, new MyMeasure(data));
-            Measures.RemoveAt(Measures.Count - 1);
         }
     }
 
-    internal class MyMeasure
+    internal class ClipboardData
     {
-        public object Data { get; set; }
+        internal object Data { get; set; }
 
-        public MyMeasure(object data)
+        internal ClipboardData(object data)
         {
             Data = data;
         }
@@ -56,22 +53,22 @@ namespace PluginClipboard
                 return string.Empty;
             }
 
+            var text = Data as string;
+            if (text != null)
+            {
+                return text.Replace(Environment.NewLine, "/r/n").Trim();
+            }
+
             var collection = Data as StringCollection;
             if (collection != null)
             {
-                return "[FILE] " + collection[0];
+                return "[FILE]" + collection[0];
             }
 
             var image = Data as Image;
             if (image != null)
             {
-                return "[IMG] " + image.Size.Height + image.Size.Width;
-            }
-
-            var text = Data as string;
-            if (text != null)
-            {
-                return "[TEXT] " + Data;
+                return "[IMG]" + image.Size.Height + image.Size.Width;
             }
 
             var dataObject = Data as IDataObject;
