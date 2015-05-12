@@ -53,6 +53,43 @@ namespace PluginClipboard
 
             return _historyList[id].ToString();
         }
+
+        internal void DeleteHistoryItem(int id)
+        {
+            _historyList.RemoveAt(id);
+        }
+
+        internal void SetClipboard(int id)
+        {
+            var data = _historyList[id].Data;
+
+            var text = data as string;
+            if (text != null)
+            {
+                Clipboard.SetText(text);
+                return;
+            }
+
+            var collection = data as StringCollection;
+            if (collection != null)
+            {
+                Clipboard.SetFileDropList(collection);
+                return;
+            }
+
+            var image = data as Image;
+            if (image != null)
+            {
+                Clipboard.SetImage(image);
+                return;
+            }
+
+            var dataObject = data as IDataObject;
+            if (dataObject != null)
+            {
+                Clipboard.SetDataObject(dataObject);
+            }
+        }
     }
 
     internal class ClipboardData

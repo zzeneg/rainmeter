@@ -36,6 +36,19 @@ namespace PluginClipboard
 #if DLLEXPORT_EXECUTEBANG
         internal void ExecuteBang(string args)
         {
+            API.Log(API.LogType.Notice, args);
+            switch (args)
+            {
+                case "Set":
+                    ClipboardHandler.Current.SetClipboard(_id);
+                    break;
+                case "Delete":
+                    ClipboardHandler.Current.DeleteHistoryItem(_id);
+                    break;
+                default:
+                    API.Log(API.LogType.Error, "Unsupported bang: " + args);
+                    break;
+            }
         }
 #endif
     }
