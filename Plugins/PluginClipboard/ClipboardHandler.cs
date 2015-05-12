@@ -19,6 +19,8 @@ namespace PluginClipboard
             get { return _current ?? (_current = new ClipboardHandler()); }
         }
 
+        internal static IntPtr RmSkin;
+
         internal ClipboardHandler()
         {
             _historyList = new List<ClipboardData>();
@@ -42,6 +44,7 @@ namespace PluginClipboard
             {
                 _historyList.RemoveAt(_historyList.Count - 1);
             }
+            ReloadMeasures();
         }
 
         internal string GetHistoryItem(int id)
@@ -56,7 +59,13 @@ namespace PluginClipboard
 
         internal void DeleteHistoryItem(int id)
         {
+            if (id >= _historyList.Count)
+            {
+                return;
+            }
+
             _historyList.RemoveAt(id);
+            ReloadMeasures();
         }
 
         internal void SetClipboard(int id)
@@ -89,6 +98,11 @@ namespace PluginClipboard
             {
                 Clipboard.SetDataObject(dataObject);
             }
+        }
+
+        private void ReloadMeasures()
+        {
+            API.Execute(RmSkin, "!Update");
         }
     }
 

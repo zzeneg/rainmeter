@@ -8,6 +8,8 @@ namespace PluginClipboard
     {
         private readonly int _id;
 
+        private string _renderString;
+
         internal static int Count;
 
         internal Measure()
@@ -18,7 +20,7 @@ namespace PluginClipboard
 
         internal void Reload(API api, ref double maxValue)
         {
-
+            _renderString = ClipboardHandler.Current.GetHistoryItem(_id);
         }
 
         internal double Update()
@@ -29,7 +31,7 @@ namespace PluginClipboard
 #if DLLEXPORT_GETSTRING
         internal string GetString()
         {
-            return ClipboardHandler.Current.GetHistoryItem(_id);
+            return _renderString;
         }
 #endif
 
@@ -65,6 +67,8 @@ namespace PluginClipboard
             data = GCHandle.ToIntPtr(GCHandle.Alloc(new Measure()));
             if (!ClipboardViewer.IsStarted)
             {
+                var api = new API(rm);
+                ClipboardHandler.RmSkin = api.GetSkin();
                 ClipboardViewer.Start();
             }
         }
