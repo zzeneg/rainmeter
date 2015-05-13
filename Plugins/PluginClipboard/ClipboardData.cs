@@ -1,33 +1,41 @@
+using System.Collections.Generic;
+using System.IO;
 using System.Windows.Forms;
 
 namespace PluginClipboard
 {
     internal class ClipboardData
     {
-
-        private readonly Convertor _convertor;
-
-        private readonly object _data;
+        private readonly DataObject _dataObject;
 
         private readonly string _text;
 
-        internal ClipboardData(DataObject dataObject)
+        private delegate TResult Func<in T, out TResult>(T arg);
+
+        private readonly Dictionary<string, Func<DataObject, string>> _convertors = new Dictionary
+            <string, Func<DataObject, string>>
         {
-            foreach (var convertor in Convertor.AllConvertors)
+            {DataFormats.Bitmap, o => "[IMG] " + o.GetImage().Size},
+            {DataFormats.FileDrop, o => "[FILE] " + Path.GetFileName(o.GetFileDropList()[0])},
+            {DataFormats.Text, o => o.GetText()}
+        };
+
+        internal ClipboardData(IDataObject dataObject)
+        {
+            _dataObject = new DataObject();
+            foreach (var format in dataObject.GetFormats())
             {
-                if (dataObject.GetDataPresent(convertor.Format))
+                _dataObject.SetData(format, dataObject.GetData(format));
+                if (_convertors.ContainsKey(format))
                 {
-                    _convertor = convertor;
-                    _data = convertor.GetObject(dataObject);
-                    _text = convertor.GetString(dataObject);
-                    break;
+                    _text = _convertors[format](_dataObject);
                 }
             }
         }
 
         internal void SetToClipboard()
         {
-            _convertor.SetObject(_data);
+            Clipboard.SetDataObject(_dataObject);
         }
 
         public override string ToString()
