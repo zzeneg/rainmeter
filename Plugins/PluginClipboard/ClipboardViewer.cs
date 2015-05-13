@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Threading;
 using System.Windows.Forms;
-using Rainmeter;
 
 namespace PluginClipboard
 {
     internal class ClipboardViewer : Form
     {
         private static ClipboardViewer _mInstance;
-
-        internal delegate void DeviceNotifyDelegate(ClipboardData data);
-        internal static event DeviceNotifyDelegate DeviceNotify = ClipboardHandler.Current.AddHistoryItem;
 
         private static IntPtr _clipboardViewer;
 
@@ -21,7 +17,6 @@ namespace PluginClipboard
 
         internal static void Start()
         {
-            API.Log(API.LogType.Notice, "ClipboardViewer.Start");
             IsStarted = true;
             Thread t = new Thread(RunForm);
             t.SetApartmentState(ApartmentState.STA);
@@ -31,20 +26,17 @@ namespace PluginClipboard
 
         internal static void Stop()
         {
-            API.Log(API.LogType.Notice, "ClipboardViewer.Stop");
             IsStarted = false;
             _mInstance.Invoke(new MethodInvoker(_mInstance.Close));
         }
 
         private static void RunForm()
         {
-            API.Log(API.LogType.Notice, "ClipboardViewer.RunForm");
             Application.Run(new ClipboardViewer());
         }
 
         protected override void OnLoad(EventArgs e)
         {
-            API.Log(API.LogType.Notice, "ClipboardViewer.OnLoad");
             Visible = false;
             ShowInTaskbar = false;
 
@@ -55,7 +47,6 @@ namespace PluginClipboard
 
         protected override void Dispose(bool disposing)
         {
-            API.Log(API.LogType.Notice, "ClipboardViewer.Dispose");
             if (disposing)
             {
                 NativeMethods.ChangeClipboardChain(Handle, _clipboardViewer);
@@ -69,8 +60,8 @@ namespace PluginClipboard
             switch (m.Msg)
             {
                 case WM_DRAWCLIPBOARD:
-                    var data = (DataObject) Clipboard.GetDataObject();
-                    DeviceNotify(new ClipboardData(data));
+                    var clipboardData = new ClipboardData(Clipboard.GetDataObject());
+                    ClipboardHandler.Current.AddHistoryItem(clipboardData);
                     NativeMethods.SendMessage(_clipboardViewer, m.Msg, m.WParam, m.LParam);
                     break;
 

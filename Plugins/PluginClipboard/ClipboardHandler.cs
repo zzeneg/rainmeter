@@ -25,7 +25,6 @@ namespace PluginClipboard
 
         internal void AddHistoryItem(ClipboardData clipboardData)
         {
-            API.Log(API.LogType.Notice, "HandleClipboardData");
 
             for (var i = _historyList.Count - 1; i >= 0; i--)
             {
@@ -55,7 +54,10 @@ namespace PluginClipboard
 
         internal void DeleteHistoryItem(int id)
         {
-            _historyList.RemoveAt(id);
+            if (id < _historyList.Count)
+            {
+                _historyList.RemoveAt(id);
+            }
         }
 
         internal void SetHistoryItem(int id)
