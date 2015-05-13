@@ -25,12 +25,14 @@ namespace PluginClipboard
         };
 
         /// <summary>
+        /// Skip some DataFormats due to a bug in .NET
         /// </summary>
         /// <see cref="https://social.msdn.microsoft.com/Forums/windows/en-US/ea562ff1-9558-425d-a30a-6a1809224edc/how-best-to-avoid-the-land-mines-planted-in-the-idataobject-returned-from-clipboardgetdataobject"/>
         private readonly string[] _buggyFormats = {DataFormats.EnhancedMetafile, DataFormats.MetafilePict, DataFormats.Palette};
 
         internal ClipboardData(IDataObject dataObject)
         {
+            // Have to create new DataObject instance and copy all data to it, can't just store it
             _dataObject = new DataObject();
             foreach (var format in dataObject.GetFormats())
             {

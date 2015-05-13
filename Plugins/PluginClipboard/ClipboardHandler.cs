@@ -1,9 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-using Rainmeter;
 
 namespace PluginClipboard
 {
@@ -23,6 +18,9 @@ namespace PluginClipboard
             _historyList = new List<ClipboardData>();
         }
 
+        /// <summary>
+        /// Add item from clipboard to history list
+        /// </summary>
         internal void AddHistoryItem(ClipboardData clipboardData)
         {
 
@@ -42,6 +40,9 @@ namespace PluginClipboard
             }
         }
 
+        /// <summary>
+        /// Get string representation of item
+        /// </summary>
         internal string GetHistoryItem(int id)
         {
             if (id < _historyList.Count)
@@ -52,6 +53,9 @@ namespace PluginClipboard
             return string.Empty;
         }
 
+        /// <summary>
+        /// Delete item from history list
+        /// </summary>
         internal void DeleteHistoryItem(int id)
         {
             if (id < _historyList.Count)
@@ -60,6 +64,9 @@ namespace PluginClipboard
             }
         }
 
+        /// <summary>
+        /// Set item from history list to clipboard
+        /// </summary>
         internal void SetHistoryItem(int id)
         {
             if (id < _historyList.Count)

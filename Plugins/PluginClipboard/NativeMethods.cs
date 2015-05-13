@@ -9,7 +9,7 @@ namespace PluginClipboard
     internal static class NativeMethods
     {
         [DllImport("User32.dll", CharSet = CharSet.Auto)]
-        internal static extern int SetClipboardViewer(int hWndNewViewer);
+        internal static extern IntPtr SetClipboardViewer(IntPtr hWndNewViewer);
 
         [DllImport("User32.dll", CharSet = CharSet.Auto)]
         [return: MarshalAs(UnmanagedType.Bool)]
