@@ -29,7 +29,7 @@ namespace PluginClipboard
 
             for (var i = _historyList.Count - 1; i >= 0; i--)
             {
-                if (_historyList[i].RenderedString == clipboardData.RenderedString)
+                if (_historyList[i].ToString() == clipboardData.ToString())
                 {
                     _historyList.RemoveAt(i);
                 }
@@ -45,12 +45,12 @@ namespace PluginClipboard
 
         internal string GetHistoryItem(int id)
         {
-            if (id >= _historyList.Count)
+            if (id < _historyList.Count)
             {
-                return string.Empty;
+                return _historyList[id].ToString();
             }
 
-            return _historyList[id].RenderedString;
+            return string.Empty;
         }
 
         internal void DeleteHistoryItem(int id)
@@ -58,35 +58,11 @@ namespace PluginClipboard
             _historyList.RemoveAt(id);
         }
 
-        internal void SetClipboard(int id)
+        internal void SetHistoryItem(int id)
         {
-            var data = _historyList[id].Data;
-
-            var text = data as string;
-            if (text != null)
+            if (id < _historyList.Count)
             {
-                Clipboard.SetText(text);
-                return;
-            }
-
-            var collection = data as StringCollection;
-            if (collection != null)
-            {
-                Clipboard.SetFileDropList(collection);
-                return;
-            }
-
-            var image = data as Image;
-            if (image != null)
-            {
-                Clipboard.SetImage(image);
-                return;
-            }
-
-            var dataObject = data as IDataObject;
-            if (dataObject != null)
-            {
-                Clipboard.SetDataObject(dataObject);
+                _historyList[id].SetToClipboard();
             }
         }
     }

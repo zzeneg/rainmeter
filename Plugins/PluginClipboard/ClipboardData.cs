@@ -1,54 +1,38 @@
-using System;
-using System.Collections.Specialized;
-using System.Drawing;
 using System.Windows.Forms;
 
 namespace PluginClipboard
 {
     internal class ClipboardData
     {
-        internal object Data { get; private set; }
 
-        internal string RenderedString { get; private set; }
+        private readonly Convertor _convertor;
 
-        internal ClipboardData(object data)
+        private readonly object _data;
+
+        private readonly string _text;
+
+        internal ClipboardData(DataObject dataObject)
         {
-            Data = data;
-            RenderedString = GetRenderString();
+            foreach (var convertor in Convertor.AllConvertors)
+            {
+                if (dataObject.GetDataPresent(convertor.Format))
+                {
+                    _convertor = convertor;
+                    _data = convertor.GetObject(dataObject);
+                    _text = convertor.GetString(dataObject);
+                    break;
+                }
+            }
         }
 
-        private string GetRenderString()
+        internal void SetToClipboard()
         {
-            if (Data == null)
-            {
-                return string.Empty;
-            }
+            _convertor.SetObject(_data);
+        }
 
-            var text = Data as string;
-            if (text != null)
-            {
-                return text.Replace(Environment.NewLine, "/r/n").Trim();
-            }
-
-            var collection = Data as StringCollection;
-            if (collection != null)
-            {
-                return "[FILE]" + collection[0];
-            }
-
-            var image = Data as Image;
-            if (image != null)
-            {
-                return "[IMG]" + image.Size.Height + image.Size.Width;
-            }
-
-            var dataObject = Data as IDataObject;
-            if (dataObject != null)
-            {
-                return "[DATA] " + dataObject.GetData(dataObject.GetFormats()[0]);
-            }
-
-            return "Conversion error";
+        public override string ToString()
+        {
+            return _text;
         }
     }
 }

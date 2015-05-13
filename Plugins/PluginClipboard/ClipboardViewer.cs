@@ -69,24 +69,7 @@ namespace PluginClipboard
             switch (m.Msg)
             {
                 case WM_DRAWCLIPBOARD:
-                    object data;
-                    if (Clipboard.ContainsFileDropList())
-                    {
-                        data = Clipboard.GetFileDropList();
-                    }
-                    else if (Clipboard.ContainsImage())
-                    {
-                        data = Clipboard.GetImage();
-                    }
-                    else if (Clipboard.ContainsText())
-                    {
-                        data = Clipboard.GetText();
-                    }
-                    else
-                    {
-                        data = Clipboard.GetDataObject();
-                    }
-
+                    var data = (DataObject) Clipboard.GetDataObject();
                     DeviceNotify(new ClipboardData(data));
                     NativeMethods.SendMessage(_clipboardViewer, m.Msg, m.WParam, m.LParam);
                     break;

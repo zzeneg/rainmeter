@@ -40,7 +40,7 @@ namespace PluginClipboard
             switch (args)
             {
                 case "Set":
-                    ClipboardHandler.Current.SetClipboard(_id);
+                    ClipboardHandler.Current.SetHistoryItem(_id);
                     break;
                 case "Delete":
                     ClipboardHandler.Current.DeleteHistoryItem(_id);

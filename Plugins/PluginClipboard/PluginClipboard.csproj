@@ -79,6 +79,7 @@
     <Compile Include="ClipboardViewer.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Convertor.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="PluginClipboard.cs" />
     <Compile Include="AssemblyInfo.cs" />
