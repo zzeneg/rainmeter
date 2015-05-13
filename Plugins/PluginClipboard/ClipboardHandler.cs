@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Drawing;
 using System.Text;
@@ -30,7 +29,7 @@ namespace PluginClipboard
 
             for (var i = _historyList.Count - 1; i >= 0; i--)
             {
-                if (_historyList[i].ToString() == clipboardData.ToString())
+                if (_historyList[i].RenderedString == clipboardData.RenderedString)
                 {
                     _historyList.RemoveAt(i);
                 }
@@ -51,7 +50,7 @@ namespace PluginClipboard
                 return string.Empty;
             }
 
-            return _historyList[id].ToString();
+            return _historyList[id].RenderedString;
         }
 
         internal void DeleteHistoryItem(int id)
@@ -89,50 +88,6 @@ namespace PluginClipboard
             {
                 Clipboard.SetDataObject(dataObject);
             }
-        }
-    }
-
-    internal class ClipboardData
-    {
-        internal object Data { get; set; }
-
-        internal ClipboardData(object data)
-        {
-            Data = data;
-        }
-
-        public override string ToString()
-        {
-            if (Data == null)
-            {
-                return string.Empty;
-            }
-
-            var text = Data as string;
-            if (text != null)
-            {
-                return text.Replace(Environment.NewLine, "/r/n").Trim();
-            }
-
-            var collection = Data as StringCollection;
-            if (collection != null)
-            {
-                return "[FILE]" + collection[0];
-            }
-
-            var image = Data as Image;
-            if (image != null)
-            {
-                return "[IMG]" + image.Size.Height + image.Size.Width;
-            }
-
-            var dataObject = Data as IDataObject;
-            if (dataObject != null)
-            {
-                return "[DATA] " + dataObject.GetData(dataObject.GetFormats()[0]);
-            }
-
-            return "Conversion error";
         }
     }
 }
