@@ -91,14 +91,11 @@ namespace PluginClipboard
             return 0.0;
         }
 
-#if DLLEXPORT_GETSTRING
         internal string GetString()
         {
             return ClipboardHandler.Current.GetHistoryItem(_id);
         }
-#endif
 
-#if DLLEXPORT_EXECUTEBANG
         internal void ExecuteBang(string args)
         {
             switch (args)
@@ -114,14 +111,11 @@ namespace PluginClipboard
                     break;
             }
         }
-#endif
     }
 
     public static class Plugin
     {
-#if DLLEXPORT_GETSTRING
         static IntPtr StringBuffer = IntPtr.Zero;
-#endif
 
         [DllExport]
         public static void Initialize(ref IntPtr data, IntPtr rm)
@@ -146,13 +140,11 @@ namespace PluginClipboard
             }
             GCHandle.FromIntPtr(data).Free();
 
-#if DLLEXPORT_GETSTRING
             if (StringBuffer != IntPtr.Zero)
             {
                 Marshal.FreeHGlobal(StringBuffer);
                 StringBuffer = IntPtr.Zero;
             }
-#endif
         }
 
         [DllExport]
@@ -169,7 +161,6 @@ namespace PluginClipboard
             return measure.Update();
         }
 
-#if DLLEXPORT_GETSTRING
         [DllExport]
         public static IntPtr GetString(IntPtr data)
         {
@@ -188,15 +179,11 @@ namespace PluginClipboard
 
             return StringBuffer;
         }
-#endif
-
-#if DLLEXPORT_EXECUTEBANG
         [DllExport]
         public static void ExecuteBang(IntPtr data, IntPtr args)
         {
             Measure measure = (Measure)GCHandle.FromIntPtr(data).Target;
             measure.ExecuteBang(Marshal.PtrToStringUni(args));
         }
-#endif
     }
 }
